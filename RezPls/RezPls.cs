@@ -38,7 +38,7 @@ public partial class RezPls : IDalamudPlugin
             Disable();
         Dalamud.Commands.AddHandler("/rezpls", new CommandInfo(OnRezPls)
         {
-            HelpMessage = "Open the configuration window for RezPls.",
+            HelpMessage = "打开 RezPls 的配置窗口。",
             ShowInHelp  = true,
         });
     }

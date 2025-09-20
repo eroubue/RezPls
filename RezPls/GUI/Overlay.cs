@@ -74,21 +74,21 @@ public class Overlay(ActorWatcher actorWatcher) : IDisposable
         {
             if (state.HasStatus)
                 return _drawDispels
-                    ? (CastType.Dispel, "Needs Cleanse", RezPls.Config.ShowIconDispel, RezPls.Config.ShowInWorldTextDispel)
+                    ? (CastType.Dispel, "需要净化", RezPls.Config.ShowIconDispel, RezPls.Config.ShowInWorldTextDispel)
                     : (CastType.None, "", false, false);
 
             return _drawRaises
-                ? (CastType.Raise, "Already Raised", RezPls.Config.ShowIcon, RezPls.Config.ShowInWorldText)
+                ? (CastType.Raise, "已复活", RezPls.Config.ShowIcon, RezPls.Config.ShowInWorldText)
                 : (CastType.None, "", false, false);
         }
 
         if (state.Type == CastType.Raise)
             return _drawRaises
-                ? (CastType.Raise, $"Raise: {name}", RezPls.Config.ShowIcon, RezPls.Config.ShowInWorldText)
+                ? (CastType.Raise, $"复活: {name}", RezPls.Config.ShowIcon, RezPls.Config.ShowInWorldText)
                 : (CastType.None, "", false, false);
 
         return _drawDispels
-            ? (CastType.Raise, $"Cleanse: {name}", RezPls.Config.ShowIconDispel, RezPls.Config.ShowInWorldTextDispel)
+            ? (CastType.Raise, $"净化: {name}", RezPls.Config.ShowIconDispel, RezPls.Config.ShowInWorldTextDispel)
             : (CastType.None, "", false, false);
     }
 
@@ -271,13 +271,13 @@ public class Overlay(ActorWatcher actorWatcher) : IDisposable
     private string GetActorName(CastType type, ulong corpse, ulong caster)
     {
         if (type == CastType.Dispel)
-            return Names.GetValueOrDefault(caster, "Unknown");
+            return Names.GetValueOrDefault(caster, "未知");
         if (corpse == caster)
-            return "LIMIT BREAK";
+            return "极限技";
         if (caster == 0)
             return string.Empty;
 
-        return Names.GetValueOrDefault(caster, "Unknown");
+        return Names.GetValueOrDefault(caster, "未知");
     }
 
     private Vector3? GetActorPosition(ulong corpse)

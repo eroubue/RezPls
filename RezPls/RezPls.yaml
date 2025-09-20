@@ -1,11 +1,10 @@
 ﻿name: RezPls
-author: Ottermandias
+author: Ottermandias Nag0mi(汉化)
 description: |-
-  Easy overview about who is currently resurrecting who,
-  who is already resurrected,
-  and who has removable detrimental status effects in the world 
-  as well as in the group or alliance interface.
-punchline: Highlighting of Raises and detrimental status effects.
+  轻松概览谁正在复活谁,
+  已经复活了,
+  以及世界上谁拥有可驱散的debuff影响.
+punchline: 高亮显示被复活和可被驱散的debuff状态.
 repo_url: https://github.com/Ottermandias/RezPls
 tags:
   - Resurrection
