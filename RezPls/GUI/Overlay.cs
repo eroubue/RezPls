@@ -70,38 +70,38 @@ public class Overlay(ActorWatcher actorWatcher) : IDisposable
 
     private (CastType, string, bool, bool) GetText(string name, ActorState state)
     {
-        if (state.Caster == 0)
+        if (state.Caster is 0)
         {
             if (state.HasStatus)
                 return _drawDispels
-                    ? (CastType.Dispel, "需要净化", RezPls.Config.ShowIconDispel, RezPls.Config.ShowInWorldTextDispel)
+                    ? (CastType.Dispel, "Needs Cleanse", RezPls.Config.ShowIconDispel, RezPls.Config.ShowInWorldTextDispel)
                     : (CastType.None, "", false, false);
 
             return _drawRaises
-                ? (CastType.Raise, "已复活", RezPls.Config.ShowIcon, RezPls.Config.ShowInWorldText)
+                ? (CastType.Raise, "Already Raised", RezPls.Config.ShowIcon, RezPls.Config.ShowInWorldText)
                 : (CastType.None, "", false, false);
         }
 
         if (state.Type == CastType.Raise)
             return _drawRaises
-                ? (CastType.Raise, $"复活: {name}", RezPls.Config.ShowIcon, RezPls.Config.ShowInWorldText)
+                ? (CastType.Raise, $"Raise: {name}", RezPls.Config.ShowIcon, RezPls.Config.ShowInWorldText)
                 : (CastType.None, "", false, false);
 
         return _drawDispels
-            ? (CastType.Raise, $"净化: {name}", RezPls.Config.ShowIconDispel, RezPls.Config.ShowInWorldTextDispel)
+            ? (CastType.Raise, $"Cleanse: {name}", RezPls.Config.ShowIconDispel, RezPls.Config.ShowInWorldTextDispel)
             : (CastType.None, "", false, false);
     }
 
     public void DrawInWorld(Vector2 pos, string name, ActorState state)
     {
         var (type, text, drawIcon, drawText) = GetText(name, state);
-        if (type == CastType.None)
+        if (type is CastType.None)
             return;
 
         if (drawIcon)
         {
-            var icon = type == CastType.Dispel ? _dispelIcon : _raiseIcon;
-            if (icon == null)
+            var icon = type is CastType.Dispel ? _dispelIcon : _raiseIcon;
+            if (icon is null)
                 return;
 
             var scaledIconSize = DefaultIconSize * RezPls.Config.IconScale * ImGui.GetIO().FontGlobalScale;
@@ -113,7 +113,7 @@ public class Overlay(ActorWatcher actorWatcher) : IDisposable
 
         if (drawText)
         {
-            var color    = type == CastType.Dispel ? RezPls.Config.InWorldBackgroundColorDispel : RezPls.Config.InWorldBackgroundColor;
+            var color    = type is CastType.Dispel ? RezPls.Config.InWorldBackgroundColorDispel : RezPls.Config.InWorldBackgroundColor;
             var textSize = ImGui.CalcTextSize(text);
             ImGui.SetCursorPos(new Vector2(pos.X,                             pos.Y)
               - new Vector2(textSize.X / 2 + ImGui.GetStyle().FramePadding.X, 0)
@@ -143,7 +143,7 @@ public class Overlay(ActorWatcher actorWatcher) : IDisposable
     {
         var pos = new Vector2(node->X, node->Y);
         var par = node->ParentNode;
-        while (par != null)
+        while (par is not null)
         {
             pos *= new Vector2(par->ScaleX, par->ScaleY);
             pos += new Vector2(par->X,      par->Y);
@@ -270,14 +270,14 @@ public class Overlay(ActorWatcher actorWatcher) : IDisposable
 
     private string GetActorName(CastType type, ulong corpse, ulong caster)
     {
-        if (type == CastType.Dispel)
-            return Names.GetValueOrDefault(caster, "未知");
+        if (type is CastType.Dispel)
+            return Names.GetValueOrDefault(caster, "Unknown");
         if (corpse == caster)
-            return "极限技";
-        if (caster == 0)
+            return "LIMIT BREAK";
+        if (caster is 0)
             return string.Empty;
 
-        return Names.GetValueOrDefault(caster, "未知");
+        return Names.GetValueOrDefault(caster, "Unknown");
     }
 
     private Vector3? GetActorPosition(ulong corpse)
@@ -289,7 +289,7 @@ public class Overlay(ActorWatcher actorWatcher) : IDisposable
         {
             if (state.HasStatus)
             {
-                if (state.Type == CastType.Dispel && state.Caster != 0)
+                if (state.Type is CastType.Dispel && state.Caster is not 0)
                 {
                     if (PlayerRez.Item1 == corpse && state.Caster != PlayerRez.Item2.Caster)
                         return RezPls.Config.DoubleRaiseColor;
@@ -300,13 +300,13 @@ public class Overlay(ActorWatcher actorWatcher) : IDisposable
                 return RezPls.Config.DispellableColor;
             }
 
-            if (state.Type == CastType.Dispel)
+            if (state.Type is CastType.Dispel)
                 return corpse == PlayerRez.Item1 ? RezPls.Config.DoubleRaiseColor : 0;
         }
 
         if (_drawRaises)
         {
-            if (state.Caster == 0)
+            if (state.Caster is 0)
                 return PlayerRez.Item1 != corpse ? RezPls.Config.RaisedColor : RezPls.Config.DoubleRaiseColor;
             if (corpse == PlayerRez.Item1 && state.Caster != PlayerRez.Item2.Caster)
                 return RezPls.Config.DoubleRaiseColor;
@@ -341,17 +341,17 @@ public class Overlay(ActorWatcher actorWatcher) : IDisposable
         {
             if (!_drawRaises && state is { Type: CastType.Raise, HasStatus: false })
                 return;
-            if (!_drawDispels && state.Type != CastType.Raise)
+            if (!_drawDispels && state.Type is not CastType.Raise)
                 return;
 
             var name = GetActorName(state.Type, corpse, state.Caster);
             if (anyParty)
             {
                 var group = _hudManager.FindGroupMemberById(corpse);
-                if (group != null)
+                if (group is not null)
                 {
                     var color = GetColor(corpse, state);
-                    if (color != 0)
+                    if (color is not 0)
                         switch (group.Value.groupIdx)
                         {
                             case 0:
@@ -382,14 +382,14 @@ public class Overlay(ActorWatcher actorWatcher) : IDisposable
                 return;
 
             var pos = GetActorPosition(corpse);
-            if (pos != null && Dalamud.GameGui.WorldToScreen(pos.Value, out var screenPos))
+            if (pos is not null && Dalamud.GameGui.WorldToScreen(pos.Value, out var screenPos))
                 DrawInWorld(screenPos, name, state);
         }
     }
 
     private void Draw()
     {
-        if (Resurrections.Count == 0)
+        if (Resurrections.Count is 0)
             return;
 
         _drawRaises  = RezPls.Config.EnabledRaise;
@@ -398,14 +398,14 @@ public class Overlay(ActorWatcher actorWatcher) : IDisposable
         {
             var (job, level) = ActorWatcher.CurrentPlayerJob();
 
-            if (!job.CanRaise() || job == Job.RDM && level < 64)
+            if (!job.CanRaise() || job is Job.RDM && level < 64)
                 _drawRaises &= !RezPls.Config.RestrictedJobs;
-            if (!job.CanDispel() || job == Job.BRD && level < 35)
+            if (!job.CanDispel() || job is Job.BRD && level < 35)
                 _drawDispels &= !RezPls.Config.RestrictedJobsDispel;
         }
 
         var drawPtrOpt = BeginRezRects();
-        if (drawPtrOpt == null)
+        if (drawPtrOpt is null)
             return;
 
         try
